@@ -121,7 +121,7 @@ export const refreshToken = asyncHandler(
     jwt.verify(
       refreshToken,
       process.env.REFRESH_TOKEN_SECRET,
-      async (err, user) => {
+      async (err, user: { username: string }) => {
         if (err) {
           res.status(403).json({ message: "Forbidden" });
           return;
