@@ -8,7 +8,9 @@ import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import connectDB from "./config/dbConn";
 import { errorHandler } from "./middlewares/errorMiddleware";
+import path from "path";
 
+import root from "./routes/root";
 import userRoutes from "./routes/userRoutes";
 import authRoutes from "./routes/authRoutes";
 import postRoutes from "./routes/postRoutes";
@@ -28,10 +30,24 @@ app.use(bodyParser.json());
 app.use(cors(corsOptions));
 app.use(cookieParser());
 
+app.use("/", express.static(path.join(__dirname, "public")));
+
+app.use("/", root);
 // Routes
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/posts", postRoutes);
+
+app.all("*", (req, res) => {
+  res.status(404);
+  if (req.accepts("html")) {
+    res.sendFile(path.join(__dirname, "views", "404.html"));
+  } else if (req.accepts("json")) {
+    res.json({ message: "404 Not Found" });
+  } else {
+    res.type("txt").send("404 Not Found");
+  }
+});
 
 app.use(errorHandler);
 
