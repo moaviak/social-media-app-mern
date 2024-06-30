@@ -41,10 +41,3 @@ export type INewPost = {
   location?: string;
   tags?: string;
 };
-
-export type IComment = {
-  userId: Types.ObjectId;
-  postId: Types.ObjectId;
-  content: String;
-  likes: [Types.ObjectId] | Types.ObjectId[];
-};
