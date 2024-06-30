@@ -1,19 +1,10 @@
 import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
 import User from "../models/User";
-import { IUpdateUser, IUser } from "../types";
-import {
-  ref,
-  uploadBytes,
-  getDownloadURL,
-  deleteObject,
-  StorageReference,
-} from "firebase/storage";
-import { v4 } from "uuid";
+import { IUser } from "../types";
+import { deleteObject, StorageReference } from "firebase/storage";
 import mongoose, { Types } from "mongoose";
-import Post from "../models/Post";
 import { getPostsWithCreators, uploadFileToFirebase } from "../utils";
-import { storage } from "../config/firebase.config";
 
 // @desc Get All Users
 // @route GET /api/users
