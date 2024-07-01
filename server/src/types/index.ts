@@ -29,7 +29,6 @@ export type IPost = {
   content: String;
   location: String;
   likes: [Types.ObjectId] | Types.ObjectId[];
-  comments: [Types.ObjectId] | Types.ObjectId[];
   createdAt: String;
   updatedAt: String;
 };

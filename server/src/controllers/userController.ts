@@ -6,17 +6,6 @@ import { deleteObject, StorageReference } from "firebase/storage";
 import mongoose, { Types } from "mongoose";
 import { getPostsWithCreators, uploadFileToFirebase } from "../utils";
 
-// @desc Get All Users
-// @route GET /api/users
-// @access Private
-export const getAllUsers = asyncHandler(async (req: Request, res: Response) => {
-  const users = await User.find()
-    .select("-password -likedPosts -savedPosts")
-    .exec();
-
-  res.status(200).json(users);
-});
-
 // @desc Get User by Id
 // @route GET /api/users/:id
 // @access Private

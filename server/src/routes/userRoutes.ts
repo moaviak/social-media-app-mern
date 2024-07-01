@@ -1,6 +1,5 @@
 import {
   followUser,
-  getAllUsers,
   getTopCreaors,
   getUserById,
   getUserFollowers,
@@ -8,7 +7,6 @@ import {
   getUserPosts,
   searchUsers,
   updateUser,
-  // updateUser,
 } from "../controllers/userController";
 import express from "express";
 import { protect } from "../middlewares/authMiddleware";
@@ -17,10 +15,7 @@ import { upload } from "../middlewares/multerMiddleware";
 const router = express.Router();
 
 // Register User and Get All Users
-router
-  .route("/")
-  .get(protect, getAllUsers)
-  .put(upload.single("file"), protect, updateUser);
+router.route("/").put(upload.single("file"), protect, updateUser);
 
 // Get Top Creators
 router.route("/creators").get(protect, getTopCreaors);
