@@ -10,7 +10,7 @@ export const store = configureStore({
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(apiSlice.middleware),
-  devTools: false,
+  devTools: import.meta.env.VITE_REACT_APP_NODE_ENV === "development",
 });
 
 setupListeners(store.dispatch);

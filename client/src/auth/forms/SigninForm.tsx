@@ -46,8 +46,8 @@ const SigninForm = () => {
     } catch (error) {
       const err = error as IError;
 
-      if (err.data) toast({ title: err.data?.message });
-      else toast({ title: "No Response From Server" });
+      if (err.data && err.data.message) toast({ title: err.data.message });
+      else toast({ title: "Something went wrong!" });
     }
   };
 

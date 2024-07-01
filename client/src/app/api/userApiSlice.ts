@@ -85,7 +85,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
         },
       }),
       providesTags: (result) => {
-        if (result) {
+        if (result && result.length > 0) {
           return [
             { type: "User", id: result[0].creator._id },
             { type: "Post", id: "LIST" },
@@ -93,24 +93,6 @@ export const userApiSlice = apiSlice.injectEndpoints({
               type: "Post" as const,
               id: post._id,
             })),
-          ];
-        } else {
-          return [{ type: "User", id: "LIST" }];
-        }
-      },
-    }),
-    getAllUsers: builder.query<IUser[], unknown>({
-      query: () => ({
-        url: "/api/users",
-        validateStatus: (response, result) => {
-          return response.status === 200 && !result.isError;
-        },
-      }),
-      providesTags: (result) => {
-        if (result && result.length > 0) {
-          return [
-            { type: "User", id: "LIST" },
-            ...result.map((user) => ({ type: "User" as const, id: user._id })),
           ];
         } else {
           return [{ type: "User", id: "LIST" }];
@@ -202,7 +184,6 @@ export const {
   useGetTopCreatorsQuery,
   useFollowUserMutation,
   useGetUserPostsQuery,
-  useGetAllUsersQuery,
   useUpdateUserMutation,
   useGetUserFollowersQuery,
   useGetUserFollowingQuery,

@@ -22,7 +22,6 @@ import {
   useCreatePostMutation,
   useUpdatePostMutation,
 } from "@/app/api/postApiSlice";
-import { IError } from "@/lib/utils";
 
 type PostFormProps = {
   post?: IPost;
@@ -72,13 +71,7 @@ const PostForm = ({ post, action }: PostFormProps) => {
       form.reset();
       navigate("/");
     } catch (error) {
-      const err = error as IError;
-      const message = err.data
-        ? err.data.message
-        : err.status >= 500
-        ? "Internal Server Error"
-        : "Unexpected error occurred!";
-      toast({ title: message });
+      toast({ title: "Unable to upload post. Please try again!" });
     }
   };
 

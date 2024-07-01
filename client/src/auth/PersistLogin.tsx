@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useRefreshTokenMutation } from "@/app/api/authApiSlice";
@@ -11,6 +11,7 @@ const PersistLogin = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const [refreshToken, { isLoading }] = useRefreshTokenMutation();
+  const effectRan = useRef(false);
 
   useEffect(() => {
     const verifyRefreshToken = async () => {
@@ -23,11 +24,18 @@ const PersistLogin = () => {
       }
     };
 
-    if (!token) verifyRefreshToken();
+    if (!token && !effectRan.current) {
+      verifyRefreshToken();
+      effectRan.current = true;
+    }
   }, [token, refreshToken, dispatch, navigate]);
 
   if (isLoading || !token) {
-    return <PulseLoader color="#fff" />;
+    return (
+      <div className="flex w-full h-[100vh] items-center justify-center">
+        <PulseLoader color="#fff" />
+      </div>
+    );
   }
 
   return <Outlet />;

@@ -1,12 +1,11 @@
 import { Link } from "react-router-dom";
 
 import { PostStats } from "@/components/shared";
-import { IPost, IUser } from "@/types";
+import { IPost } from "@/types";
 import useAuth from "@/hooks/useAuth";
 
 type GridPostListProps = {
   posts: IPost[];
-  creator?: IUser;
   showUser?: boolean;
   showStats?: boolean;
 };

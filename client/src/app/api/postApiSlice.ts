@@ -1,4 +1,4 @@
-import { IPost, IUser } from "@/types";
+import { IPost } from "@/types";
 import { apiSlice } from "./apiSlice";
 
 export const postApiSlice = apiSlice.injectEndpoints({
@@ -140,7 +140,7 @@ export const postApiSlice = apiSlice.injectEndpoints({
         }
       },
     }),
-    getLikedPosts: builder.query<[IPost & { creator: IUser }], unknown>({
+    getLikedPosts: builder.query<IPost[], unknown>({
       query: () => ({
         url: `/api/posts/liked`,
         validateStatus: (response, result) => {

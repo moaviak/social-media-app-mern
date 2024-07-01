@@ -9,7 +9,7 @@ const useAuth = () => {
   if (token) {
     try {
       const decoded = jwtDecode<IDecode>(token);
-      return decoded.user;
+      return { ...decoded.user, isAuthenticated: true };
     } catch (error) {
       console.log("Invalid token", error);
       return {
@@ -19,6 +19,7 @@ const useAuth = () => {
         email: "",
         profilePicture: "",
         bio: "",
+        isAuthenticated: false,
       };
     }
   }
@@ -30,6 +31,7 @@ const useAuth = () => {
     email: "",
     profilePicture: "",
     bio: "",
+    isAuthenticated: false,
   };
 };
 

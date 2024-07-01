@@ -1,7 +1,8 @@
+import useAuth from "@/hooks/useAuth";
 import { Navigate, Outlet } from "react-router-dom";
 
 const AuthLayout = () => {
-  const isAuthenticated = false;
+  const { isAuthenticated } = useAuth();
 
   return (
     <>
