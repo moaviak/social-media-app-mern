@@ -53,6 +53,6 @@ const baseQueryWithReauth: BaseQueryFn<
 export const apiSlice = createApi({
   reducerPath: "snapgramApi",
   baseQuery: baseQueryWithReauth,
-  tagTypes: ["Post", "User"],
+  tagTypes: ["Post", "User", "Comment"],
   endpoints: () => ({}),
 });

@@ -3,6 +3,7 @@ import { multiFormatDateString } from "@/lib/utils";
 import { IPost } from "@/types";
 import { Link } from "react-router-dom";
 import PostStats from "./PostStats";
+import CommentForm from "../forms/CommentForm";
 
 type PostCardProps = {
   post: IPost;
@@ -75,6 +76,8 @@ const PostCard = ({ post }: PostCardProps) => {
       </Link>
 
       <PostStats post={post} userId={user.id} />
+
+      <CommentForm post={post} />
     </div>
   );
 };

@@ -16,6 +16,7 @@ export type IPost = {
   content: string;
   location: string;
   likes: [string] | string[];
+  comments: [string] | string[];
   createdAt: string;
   updatedAt: string;
 };
@@ -45,4 +46,14 @@ export type IDecode = {
     profilePicture: string;
     bio: string;
   };
+};
+
+export type IComment = {
+  _id: string;
+  text: string;
+  postId: string;
+  userId: string;
+  user?: IUser;
+  createdAt: string;
+  updatedAt: string;
 };

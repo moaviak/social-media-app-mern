@@ -8,7 +8,7 @@ import { useGetUserByIdQuery } from "@/app/api/userApiSlice";
 import { checkIsLiked } from "@/lib/utils";
 import { IPost } from "@/types";
 import { useCallback, useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { debounce } from "lodash";
 
 type PostStatsProps = {
@@ -18,6 +18,7 @@ type PostStatsProps = {
 
 const PostStats = ({ post, userId }: PostStatsProps) => {
   const location = useLocation();
+  const navigate = useNavigate();
 
   const { data: currentUser } = useGetUserByIdQuery(userId);
 
@@ -90,17 +91,32 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
       className={`flex justify-between items-center z-20 ${containerStyles}`}
     >
       <div className="flex gap-2 mr-5">
-        <img
-          src={`${
-            isLiked ? "/assets/icons/liked.svg" : "/assets/icons/like.svg"
-          }`}
-          alt="like"
-          width={20}
-          height={20}
-          onClick={(e) => handleLikePost(e)}
-          className="cursor-pointer"
-        />
-        <p className="small-medium lg:base-medium">{likes.length}</p>
+        <div className="flex gap-2 mr-5">
+          <img
+            src={`${
+              isLiked ? "/assets/icons/liked.svg" : "/assets/icons/like.svg"
+            }`}
+            alt="like"
+            width={20}
+            height={20}
+            onClick={(e) => handleLikePost(e)}
+            className="cursor-pointer"
+          />
+          <p className="small-medium lg:base-medium">{likes.length}</p>
+        </div>
+        <div className="flex gap-2 mr-5">
+          <img
+            src="/assets/icons/chat.svg"
+            alt="like"
+            width={20}
+            height={20}
+            onClick={() => navigate(`/posts/${post._id}`)}
+            className="cursor-pointer"
+          />
+          <p className="small-medium lg:base-medium">
+            {post.comments?.length || 0}
+          </p>
+        </div>
       </div>
 
       <div className="flex gap-2">
