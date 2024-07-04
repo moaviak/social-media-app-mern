@@ -11,12 +11,12 @@ const router = express.Router();
 router.use(protect);
 
 // Comment on post
-router.post("/", postComment);
+router.post("/:id", postComment);
 
 // Get all comments from posts
-router.get("/", getAllComments);
+router.get("/:id", getAllComments);
 
 // Like a comment
-router.get("/", likeComment);
+router.put("/:id", likeComment);
 
 export default router;

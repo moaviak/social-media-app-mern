@@ -30,6 +30,8 @@ router.route("/search").get(protect, searchPosts);
 
 router.route("/popular").get(protect, getPopularPosts);
 
+router.use("/comments", commentRoutes);
+
 router
   .route("/:id")
   .get(protect, getPostById)
@@ -39,7 +41,5 @@ router
 router.route("/:id/like").put(protect, likePost);
 
 router.route("/:id/save").put(protect, savePost);
-
-router.use("/:id/comments", commentRoutes);
 
 export default router;

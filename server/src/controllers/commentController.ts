@@ -6,12 +6,13 @@ import mongoose from "mongoose";
 import { IComment, IUser } from "../types";
 
 // @desc Post a Comment on Post
-// @route POST /api/posts/:id/comments
+// @route POST /api/posts/comments/:id
 // @access Private
 export const postComment = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const userId: string = req.body.user.id;
   const { text }: { text: string } = req.body;
+  console.log(id);
 
   if (!id) {
     res.status(400).json({ message: "Invalid Post ID" });
@@ -46,12 +47,15 @@ export const postComment = asyncHandler(async (req, res) => {
   if (!newComment) {
     res.status(500).json({ message: "Error posting comment!" });
   } else {
-    res.status(200).json(newComment);
+    post.comments.push(newComment._id);
+    await post.save();
+
+    res.status(200).json({ comment: newComment });
   }
 });
 
 // @desc Get all Comments on a Post
-// @route GET /api/posts/:id/comments
+// @route GET /api/posts/comments/:id
 // @access Private
 export const getAllComments = asyncHandler(async (req, res) => {
   const { id } = req.params;
@@ -96,7 +100,7 @@ export const getAllComments = asyncHandler(async (req, res) => {
 });
 
 // @desc Like a Comment
-// @route PUT /api/posts/:id/comments
+// @route PUT /api/posts/comments/:id
 // @access Private
 export const likeComment = asyncHandler(async (req, res) => {
   const { id } = req.params;

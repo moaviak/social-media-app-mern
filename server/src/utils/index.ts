@@ -68,6 +68,7 @@ export const getPostsWithCreators = async (
         content: 1,
         location: 1,
         likes: 1,
+        comments: 1,
         createdAt: 1,
         updatedAt: 1,
       },
