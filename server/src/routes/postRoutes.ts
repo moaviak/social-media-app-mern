@@ -14,6 +14,7 @@ import {
   updatePost,
 } from "../controllers/postController";
 import { upload } from "../middlewares/multerMiddleware";
+import commentRoutes from "./commentRoutes";
 
 const router = express.Router();
 
@@ -38,5 +39,7 @@ router
 router.route("/:id/like").put(protect, likePost);
 
 router.route("/:id/save").put(protect, savePost);
+
+router.use("/:id/comments", commentRoutes);
 
 export default router;

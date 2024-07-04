@@ -16,12 +16,6 @@ export type IUser = {
   following: [Types.ObjectId] | Types.ObjectId[];
 };
 
-export type IUpdateUser = {
-  name: string;
-  bio: string;
-  file: File;
-};
-
 export type IPost = {
   userId: Types.ObjectId;
   caption: String;
@@ -39,4 +33,12 @@ export type INewPost = {
   content: File;
   location?: string;
   tags?: string;
+};
+
+export type IComment = {
+  _id: Types.ObjectId;
+  userId: Types.ObjectId;
+  postId: Types.ObjectId;
+  text: string;
+  likes: Types.ObjectId[];
 };
