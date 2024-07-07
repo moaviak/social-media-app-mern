@@ -87,16 +87,20 @@ export const getAllComments = asyncHandler(async (req, res) => {
         _id: 1,
         user: {
           _id: "$user._id",
-          name: "$user.username",
+          username: "$user.username",
           profilePicture: "$user.profilePicture",
         },
         text: 1,
+        likes: 1,
         createdAt: 1,
       },
     },
+    {
+      $sort: { createdAt: -1 },
+    },
   ]);
 
-  res.status(200).json(comments);
+  res.status(200).json({ comments });
 });
 
 // @desc Like a Comment
@@ -105,6 +109,7 @@ export const getAllComments = asyncHandler(async (req, res) => {
 export const likeComment = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const userId: string = req.body.user.id;
+  const { isLiked }: { isLiked: boolean } = req.body;
 
   if (!id) {
     res.status(400).json({ message: "Invalid Post ID" });
@@ -118,14 +123,20 @@ export const likeComment = asyncHandler(async (req, res) => {
     return;
   }
 
-  const user = await User.findById(id).exec();
+  const user = await User.findById(userId).exec();
 
   if (!user) {
     res.status(401).json({ message: "Unauthorized" });
     return;
   }
 
-  comment.likes.push(user._id);
+  if (isLiked) {
+    if (!comment.likes.includes(user._id)) {
+      comment.likes.push(user._id);
+    }
+  } else {
+    comment.likes = comment.likes.filter((userId) => userId !== user._id);
+  }
 
   await comment.save();
 
