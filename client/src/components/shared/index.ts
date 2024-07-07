@@ -9,3 +9,6 @@ export { default as ProfileUploader } from "./ProfileUploader";
 export { default as PostStats } from "./PostStats";
 export { default as Loader } from "./Loader";
 export { default as UsersList } from "./UsersList";
+export { default as CommentsList } from "./CommentsList";
+export { default as Comment } from "./Comment";
+export { default as CommentsView } from "./CommentsView";

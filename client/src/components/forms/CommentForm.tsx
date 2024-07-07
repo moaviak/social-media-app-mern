@@ -46,11 +46,11 @@ const CommentForm = ({ post }: CommentFormProps) => {
   };
 
   return (
-    <div className="flex items-center mt-6">
+    <div className="flex items-center w-full">
       <img
         src={user?.profilePicture || "/assets/icons/profile-placeholder.svg"}
         alt="profile"
-        className="h-10 w-10 rounded-full mr-4"
+        className="h-10 w-10 rounded-full mr-4 object-cover"
       />
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)} className="w-full">

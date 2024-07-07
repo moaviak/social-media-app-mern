@@ -149,7 +149,7 @@
 
   /* Post Details */
   .post_details-container {
-    @apply flex flex-col flex-1 gap-10 overflow-y-scroll py-10 px-5 md:p-14 custom-scrollbar items-center;
+    @apply flex flex-col flex-1 gap-10 overflow-scroll py-10 px-5 md:p-14 custom-scrollbar items-center;
   }
 
   .post_details-card {
@@ -244,6 +244,11 @@
   .user-card {
     @apply flex-center flex-col gap-4 border border-dark-4 rounded-[20px] px-5 py-8 cursor-pointer;
   }
+
+  /* Commnents List */
+  .comments_list-container {
+    @apply flex flex-col flex-auto items-center gap-4 overflow-y-scroll my-4 py-4 px-3 custom-scrollbar;
+  }
 }
 
 @layer components {
@@ -263,6 +268,11 @@
 
   .shad-textarea {
     @apply h-36 bg-dark-3 rounded-xl border-none focus-visible:ring-1 focus-visible:ring-offset-1 ring-offset-light-3 !important;
+  }
+
+  /* Drawer */
+  .shadcn-drawer_header > .bg-slate-100 {
+    @apply bg-dark-4;
   }
 
   /* Button */

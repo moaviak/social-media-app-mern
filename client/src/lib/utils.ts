@@ -26,7 +26,10 @@ export function formatDateString(dateString: string) {
 }
 
 //
-export const multiFormatDateString = (timestamp: string = ""): string => {
+export const multiFormatDateString = (
+  timestamp: string = "",
+  isComment: boolean = false
+): string => {
   const timestampNum = Math.round(new Date(timestamp).getTime() / 1000);
   const date: Date = new Date(timestampNum * 1000);
   const now: Date = new Date();
@@ -39,14 +42,19 @@ export const multiFormatDateString = (timestamp: string = ""): string => {
 
   switch (true) {
     case Math.floor(diffInDays) >= 30:
+      if (isComment) return `${Math.floor(diffInDays)}d`;
       return formatDateString(timestamp);
     case Math.floor(diffInDays) === 1:
+      if (isComment) return `${Math.floor(diffInDays)}d`;
       return `${Math.floor(diffInDays)} day ago`;
     case Math.floor(diffInDays) > 1 && diffInDays < 30:
+      if (isComment) return `${Math.floor(diffInDays)}d`;
       return `${Math.floor(diffInDays)} days ago`;
     case Math.floor(diffInHours) >= 1:
+      if (isComment) return `${Math.floor(diffInHours)}h`;
       return `${Math.floor(diffInHours)} hours ago`;
     case Math.floor(diffInMinutes) >= 1:
+      if (isComment) return `${Math.floor(diffInMinutes)}m`;
       return `${Math.floor(diffInMinutes)} minutes ago`;
     default:
       return "Just now";

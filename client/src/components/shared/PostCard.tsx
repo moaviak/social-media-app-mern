@@ -4,6 +4,7 @@ import { IPost } from "@/types";
 import { Link } from "react-router-dom";
 import PostStats from "./PostStats";
 import CommentForm from "../forms/CommentForm";
+import CommentsView from "./CommentsView";
 
 type PostCardProps = {
   post: IPost;
@@ -23,7 +24,7 @@ const PostCard = ({ post }: PostCardProps) => {
                 "/assets/icons/profile-placeholder.svg"
               }
               alt="creator"
-              className="w-12 h-12 rounded-full"
+              className="w-12 h-12 rounded-full object-cover"
             />
           </Link>
 
@@ -75,9 +76,11 @@ const PostCard = ({ post }: PostCardProps) => {
         />
       </Link>
 
-      <PostStats post={post} userId={user.id} />
-
-      <CommentForm post={post} />
+      <div className="flex flex-col items-start gap-4">
+        <PostStats post={post} />
+        <CommentsView post={post} />
+        <CommentForm post={post} />
+      </div>
     </div>
   );
 };

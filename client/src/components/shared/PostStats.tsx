@@ -10,15 +10,17 @@ import { IPost } from "@/types";
 import { useCallback, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { debounce } from "lodash";
+import useAuth from "@/hooks/useAuth";
 
 type PostStatsProps = {
   post: IPost;
-  userId: string;
 };
 
-const PostStats = ({ post, userId }: PostStatsProps) => {
+const PostStats = ({ post }: PostStatsProps) => {
   const location = useLocation();
   const navigate = useNavigate();
+
+  const { id: userId } = useAuth();
 
   const { data: currentUser } = useGetUserByIdQuery(userId);
 
@@ -54,7 +56,7 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
 
     setLikes(likesArray);
     setIsLiked(newIsLiked);
-    debouncedLikePost(post._id, newIsLiked);
+    await debouncedLikePost(post._id, newIsLiked);
   };
 
   const debouncedLikePost = useCallback(
@@ -88,7 +90,7 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
 
   return (
     <div
-      className={`flex justify-between items-center z-20 ${containerStyles}`}
+      className={`flex justify-between items-center z-20 ${containerStyles} w-full`}
     >
       <div className="flex gap-2 mr-5">
         <div className="flex gap-2 mr-5">

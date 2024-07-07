@@ -54,6 +54,7 @@ export type IComment = {
   postId: string;
   userId: string;
   user?: IUser;
+  likes: string[];
   createdAt: string;
   updatedAt: string;
 };
