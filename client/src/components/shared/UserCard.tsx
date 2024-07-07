@@ -6,6 +6,7 @@ import { useCallback, useState } from "react";
 import useAuth from "@/hooks/useAuth";
 import { debounce } from "lodash";
 import { useFollowUserMutation } from "@/app/api/userApiSlice";
+
 type UserCardProps = {
   user: IUser;
   handleFollow?: (userId: string, isFollowing: boolean) => void;

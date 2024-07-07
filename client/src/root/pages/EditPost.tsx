@@ -1,8 +1,9 @@
+import { lazy, Suspense } from "react";
 import { useParams } from "react-router-dom";
-
-import PostForm from "@/components/forms/PostForm";
 import { PulseLoader } from "react-spinners";
 import { useGetPostByIdQuery } from "@/app/api/postApiSlice";
+
+const PostForm = lazy(() => import("@/components/forms/PostForm"));
 
 const EditPost = () => {
   const { id } = useParams();
@@ -16,7 +17,7 @@ const EditPost = () => {
       </div>
     );
 
-  if (isError) return;
+  if (isError) return null;
 
   return (
     <div className="flex flex-1">
@@ -32,11 +33,9 @@ const EditPost = () => {
           <h2 className="h3-bold md:h2-bold text-left w-full">Edit Post</h2>
         </div>
 
-        {isLoading ? (
-          <PulseLoader color="#fff" />
-        ) : (
+        <Suspense fallback={<PulseLoader color="#fff" />}>
           <PostForm action="Update" post={post} />
-        )}
+        </Suspense>
       </div>
     </div>
   );

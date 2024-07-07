@@ -1,7 +1,10 @@
+import { lazy, Suspense } from "react";
 import { useGetLikedPostsQuery } from "@/app/api/postApiSlice";
-import { GridPostList } from "@/components/shared";
 import { IUser } from "@/types";
 import { PulseLoader } from "react-spinners";
+
+// Lazy load the GridPostList component
+const GridPostList = lazy(() => import("@/components/shared/GridPostList"));
 
 const LikedPosts = ({ currentUser }: { currentUser: IUser }) => {
   const { data: likedPosts } = useGetLikedPostsQuery({});
@@ -17,7 +20,9 @@ const LikedPosts = ({ currentUser }: { currentUser: IUser }) => {
     <>
       {!likedPosts.length && <p className="text-light-4">No liked posts</p>}
 
-      <GridPostList posts={likedPosts} showStats={false} />
+      <Suspense fallback={<PulseLoader color="#fff" />}>
+        <GridPostList posts={likedPosts} showStats={false} />
+      </Suspense>
     </>
   );
 };

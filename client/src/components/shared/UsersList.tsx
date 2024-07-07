@@ -1,5 +1,8 @@
 import { IUser } from "@/types";
-import UserCard from "./UserCard";
+import { lazy, Suspense } from "react";
+import { PulseLoader } from "react-spinners";
+
+const UserCard = lazy(() => import("./UserCard"));
 
 type UsersListProps = {
   title: "Followers" | "Following" | "Search Results";
@@ -14,7 +17,9 @@ const UsersList = ({ title, users }: UsersListProps) => {
         <ul className="user-grid">
           {users?.map((user) => (
             <li key={user?._id} className="flex-1 min-w-[200px] w-full  ">
-              <UserCard user={user} />
+              <Suspense fallback={<PulseLoader color="#fff" />}>
+                <UserCard user={user} />
+              </Suspense>
             </li>
           ))}
         </ul>

@@ -1,20 +1,27 @@
 import { Outlet } from "react-router-dom";
+import { lazy, Suspense } from "react";
+import { PulseLoader } from "react-spinners";
 
-import Topbar from "@/components/shared/Topbar";
-import Bottombar from "@/components/shared/Bottombar";
-import LeftSidebar from "@/components/shared/LeftSidebar";
+// Lazy load components
+const Topbar = lazy(() => import("@/components/shared/Topbar"));
+const Bottombar = lazy(() => import("@/components/shared/Bottombar"));
+const LeftSidebar = lazy(() => import("@/components/shared/LeftSidebar"));
 
 const RootLayout = () => {
   return (
     <div className="w-full md:flex">
-      <Topbar />
-      <LeftSidebar />
+      <Suspense fallback={<PulseLoader color="#fff" />}>
+        <Topbar />
+        <LeftSidebar />
+      </Suspense>
 
       <section className="flex flex-1 h-full overflow-x-hidden">
         <Outlet />
       </section>
 
-      <Bottombar />
+      <Suspense fallback={<div>Loading...</div>}>
+        <Bottombar />
+      </Suspense>
     </div>
   );
 };

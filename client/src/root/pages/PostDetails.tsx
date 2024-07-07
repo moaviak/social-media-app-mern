@@ -1,13 +1,9 @@
+import { lazy, Suspense } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 
 import { Button } from "@/components/ui";
 import { useToast } from "@/components/ui/use-toast";
-import {
-  CommentsView,
-  GridPostList,
-  Loader,
-  PostStats,
-} from "@/components/shared";
+import { PulseLoader } from "react-spinners";
 
 import { IError, multiFormatDateString } from "@/lib/utils";
 import useAuth from "@/hooks/useAuth";
@@ -15,9 +11,14 @@ import {
   useDeletePostMutation,
   useGetPostByIdQuery,
 } from "@/app/api/postApiSlice";
-import { PulseLoader } from "react-spinners";
 import { useGetUserPostsQuery } from "@/app/api/userApiSlice";
-import CommentForm from "@/components/forms/CommentForm";
+import { Loader } from "@/components/shared";
+
+// Lazy load the components
+const CommentsView = lazy(() => import("@/components/shared/CommentsView"));
+const GridPostList = lazy(() => import("@/components/shared/GridPostList"));
+const PostStats = lazy(() => import("@/components/shared/PostStats"));
+const CommentForm = lazy(() => import("@/components/forms/CommentForm"));
 
 const PostDetails = () => {
   const { toast } = useToast();
@@ -161,9 +162,11 @@ const PostDetails = () => {
               <hr className="border w-full border-dark-4/80 mb-4" />
             </div>
             <div className="flex flex-col items-start gap-4 w-full">
-              <PostStats post={post} />
-              <CommentsView post={post} />
-              <CommentForm post={post} />
+              <Suspense fallback={<PulseLoader color="#fff" />}>
+                <PostStats post={post} />
+                <CommentsView post={post} />
+                <CommentForm post={post} />
+              </Suspense>
             </div>
           </div>
         </div>
@@ -178,7 +181,9 @@ const PostDetails = () => {
         {isUserPostLoading || !relatedPosts ? (
           <PulseLoader color="#fff" />
         ) : (
-          <GridPostList posts={relatedPosts} showUser={false} />
+          <Suspense fallback={<PulseLoader color="#fff" />}>
+            <GridPostList posts={relatedPosts} showUser={false} />
+          </Suspense>
         )}
       </div>
     </div>

@@ -1,10 +1,13 @@
+import { lazy, Suspense } from "react";
 import useAuth from "@/hooks/useAuth";
 import { multiFormatDateString } from "@/lib/utils";
 import { IPost } from "@/types";
 import { Link } from "react-router-dom";
-import PostStats from "./PostStats";
-import CommentForm from "../forms/CommentForm";
-import CommentsView from "./CommentsView";
+import Loader from "./Loader";
+
+const PostStats = lazy(() => import("./PostStats"));
+const CommentForm = lazy(() => import("../forms/CommentForm"));
+const CommentsView = lazy(() => import("./CommentsView"));
 
 type PostCardProps = {
   post: IPost;
@@ -77,9 +80,11 @@ const PostCard = ({ post }: PostCardProps) => {
       </Link>
 
       <div className="flex flex-col items-start gap-4">
-        <PostStats post={post} />
-        <CommentsView post={post} />
-        <CommentForm post={post} />
+        <Suspense fallback={<Loader />}>
+          <PostStats post={post} />
+          <CommentsView post={post} />
+          <CommentForm post={post} />
+        </Suspense>
       </div>
     </div>
   );

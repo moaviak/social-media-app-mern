@@ -1,11 +1,13 @@
-import { useGetRecentPostsQuery } from "@/app/api/postApiSlice";
-import { useGetTopCreatorsQuery } from "@/app/api/userApiSlice";
-import PostCard from "@/components/shared/PostCard";
-import UserCard from "@/components/shared/UserCard";
-import { IPost } from "@/types";
-import { useEffect, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { PulseLoader } from "react-spinners";
+import { useGetRecentPostsQuery } from "@/app/api/postApiSlice";
+import { useGetTopCreatorsQuery } from "@/app/api/userApiSlice";
+import { IPost } from "@/types";
+
+// Lazy load components
+const PostCard = lazy(() => import("@/components/shared/PostCard"));
+const UserCard = lazy(() => import("@/components/shared/UserCard"));
 
 const Home = () => {
   const { ref, inView } = useInView();
@@ -34,7 +36,6 @@ const Home = () => {
       newPosts.forEach((post) => postSet.current.add(post._id));
       setPosts((prevPosts) => [...prevPosts, ...newPosts]);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   useEffect(() => {
@@ -51,10 +52,8 @@ const Home = () => {
         prevPosts.filter((post) => {
           if (post.creator._id === userId) {
             postSet.current.delete(post._id);
-
             return false;
           }
-
           return true;
         })
       );
@@ -85,7 +84,9 @@ const Home = () => {
             <ul className="flex flex-col flex-1 gap-9 w-full ">
               {posts.map((post: IPost) => (
                 <li key={post._id} className="flex justify-center w-full">
-                  <PostCard post={post} />
+                  <Suspense fallback={<PulseLoader color="#fff" />}>
+                    <PostCard post={post} />
+                  </Suspense>
                 </li>
               ))}
             </ul>
@@ -106,7 +107,9 @@ const Home = () => {
           <ul className="grid 2xl:grid-cols-2 gap-6">
             {creators?.map((creator) => (
               <li key={creator?._id}>
-                <UserCard user={creator} handleFollow={handleFollow} />
+                <Suspense fallback={<PulseLoader color="#fff" />}>
+                  <UserCard user={creator} handleFollow={handleFollow} />
+                </Suspense>
               </li>
             ))}
           </ul>

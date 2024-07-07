@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/form";
 import { useToast } from "@/components/ui/use-toast";
 import { Textarea, Input, Button } from "@/components/ui";
-import { ProfileUploader, Loader } from "@/components/shared";
+import { Loader } from "@/components/shared";
 
 import { ProfileValidation } from "@/lib/validation";
 import useAuth from "@/hooks/useAuth";
@@ -24,6 +24,12 @@ import {
 import { useRefreshTokenMutation } from "@/app/api/authApiSlice";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "@/app/authSlice";
+import { lazy, Suspense } from "react";
+import { PulseLoader } from "react-spinners";
+
+const ProfileUploader = lazy(
+  () => import("@/components/shared/ProfileUploader")
+);
 
 const UpdateProfile = () => {
   const { toast } = useToast();
@@ -108,10 +114,12 @@ const UpdateProfile = () => {
               render={({ field }) => (
                 <FormItem className="flex">
                   <FormControl>
-                    <ProfileUploader
-                      fieldChange={field.onChange}
-                      mediaUrl={currentUser.profilePicture}
-                    />
+                    <Suspense fallback={<PulseLoader color="#fff" />}>
+                      <ProfileUploader
+                        fieldChange={field.onChange}
+                        mediaUrl={currentUser.profilePicture}
+                      />
+                    </Suspense>
                   </FormControl>
                   <FormMessage className="shad-form_message" />
                 </FormItem>

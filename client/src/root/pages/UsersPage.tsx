@@ -3,11 +3,10 @@ import {
   useGetUserFollowingQuery,
   useSearchUsersQuery,
 } from "@/app/api/userApiSlice";
-import { UsersList } from "@/components/shared";
 import { Input } from "@/components/ui";
 import useAuth from "@/hooks/useAuth";
 import useDebounce from "@/hooks/useDebounce";
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import {
   Link,
   Outlet,
@@ -17,6 +16,8 @@ import {
   useParams,
 } from "react-router-dom";
 import { PulseLoader } from "react-spinners";
+
+const UsersList = lazy(() => import("@/components/shared/UsersList"));
 
 const UsersPage = () => {
   const { id } = useParams();
@@ -92,16 +93,18 @@ const UsersPage = () => {
                 <PulseLoader color="#fff" />
               </div>
             ))}
-          <Routes>
-            <Route
-              index
-              element={<UsersList title="Followers" users={followers} />}
-            />
-            <Route
-              path="/following"
-              element={<UsersList title="Following" users={following} />}
-            />
-          </Routes>
+          <Suspense fallback={<PulseLoader color="#fff" />}>
+            <Routes>
+              <Route
+                index
+                element={<UsersList title="Followers" users={followers} />}
+              />
+              <Route
+                path="/following"
+                element={<UsersList title="Following" users={following} />}
+              />
+            </Routes>
+          </Suspense>
 
           <Outlet />
         </div>

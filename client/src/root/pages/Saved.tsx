@@ -1,7 +1,9 @@
-import { GridPostList } from "@/components/shared";
+import { lazy, Suspense } from "react";
 import useAuth from "@/hooks/useAuth";
 import { useGetSavedPostsQuery } from "@/app/api/postApiSlice";
 import { PulseLoader } from "react-spinners";
+
+const GridPostList = lazy(() => import("@/components/shared/GridPostList"));
 
 const Saved = () => {
   const currentUser = useAuth();
@@ -30,7 +32,9 @@ const Saved = () => {
           {!savedPosts ? (
             <p className="text-light-4">No available posts</p>
           ) : (
-            <GridPostList posts={savedPosts} showStats={false} />
+            <Suspense fallback={<PulseLoader color="#fff" />}>
+              <GridPostList posts={savedPosts} showStats={false} />
+            </Suspense>
           )}
         </ul>
       )}

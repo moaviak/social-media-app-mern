@@ -1,5 +1,5 @@
 import useMediaQuery from "@/hooks/useMediaQuery";
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -14,8 +14,10 @@ import {
   DrawerTrigger,
 } from "../ui/drawer";
 import { IPost } from "@/types";
-import CommentsList from "./CommentsList";
-import CommentForm from "../forms/CommentForm";
+import Loader from "./Loader";
+
+const CommentsList = lazy(() => import("./CommentsList"));
+const CommentForm = lazy(() => import("../forms/CommentForm"));
 
 const CommentsView = ({ post }: { post: IPost }) => {
   const [open, setOpen] = useState(false);
@@ -40,8 +42,10 @@ const CommentsView = ({ post }: { post: IPost }) => {
             <DialogHeader>
               <DialogTitle className="text-center">Comments</DialogTitle>
             </DialogHeader>
-            <CommentsList post={post} />
-            <CommentForm post={post} />
+            <Suspense fallback={<Loader />}>
+              <CommentsList post={post} />
+              <CommentForm post={post} />
+            </Suspense>
           </div>
         </DialogContent>
       </Dialog>
@@ -64,8 +68,10 @@ const CommentsView = ({ post }: { post: IPost }) => {
           <DrawerHeader>
             <DialogTitle className="text-center flex-1">Comments</DialogTitle>
           </DrawerHeader>
-          <CommentsList post={post} />
-          <CommentForm post={post} />
+          <Suspense fallback={<Loader />}>
+            <CommentsList post={post} />
+            <CommentForm post={post} />
+          </Suspense>
         </div>
       </DrawerContent>
     </Drawer>

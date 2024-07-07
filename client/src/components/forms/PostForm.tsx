@@ -16,12 +16,14 @@ import {
   Input,
   Textarea,
 } from "@/components/ui";
-import FileUploader from "../shared/FileUploader";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   useCreatePostMutation,
   useUpdatePostMutation,
 } from "@/app/api/postApiSlice";
+import { lazy, Suspense } from "react";
+
+const FileUploader = lazy(() => import("../shared/FileUploader"));
 
 type PostFormProps = {
   post?: IPost;
@@ -106,10 +108,12 @@ const PostForm = ({ post, action }: PostFormProps) => {
             <FormItem>
               <FormLabel className="shad-form_label">Add Photo</FormLabel>
               <FormControl>
-                <FileUploader
-                  fieldChange={field.onChange}
-                  mediaUrl={post?.content}
-                />
+                <Suspense fallback={<PulseLoader color="#fff" />}>
+                  <FileUploader
+                    fieldChange={field.onChange}
+                    mediaUrl={post?.content}
+                  />
+                </Suspense>
               </FormControl>
               <FormMessage className="shad-form_message" />
             </FormItem>

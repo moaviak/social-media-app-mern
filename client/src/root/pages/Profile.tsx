@@ -1,3 +1,4 @@
+import { lazy, Suspense, useCallback, useState } from "react";
 import {
   Route,
   Routes,
@@ -6,10 +7,7 @@ import {
   useParams,
   useLocation,
 } from "react-router-dom";
-
 import { Button } from "@/components/ui";
-import { LikedPosts } from "@/root/pages";
-import { GridPostList } from "@/components/shared";
 import useAuth from "@/hooks/useAuth";
 import {
   useFollowUserMutation,
@@ -17,8 +15,11 @@ import {
   useGetUserPostsQuery,
 } from "@/app/api/userApiSlice";
 import { PulseLoader } from "react-spinners";
-import { useCallback, useState } from "react";
 import { debounce } from "lodash";
+
+// Lazy load components
+const LikedPosts = lazy(() => import("@/root/pages/LikedPosts"));
+const GridPostList = lazy(() => import("@/components/shared/GridPostList"));
 
 interface StatBlockProps {
   value: string | number;
@@ -53,10 +54,10 @@ const Profile = () => {
 
     e.stopPropagation();
 
-    const newIsfollowing = !isFollowing;
-    setIsFollowing(newIsfollowing);
+    const newIsFollowing = !isFollowing;
+    setIsFollowing(newIsFollowing);
 
-    debouncedFollow(currentUser?._id || "", newIsfollowing);
+    debouncedFollow(currentUser?._id || "", newIsFollowing);
   }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -64,17 +65,18 @@ const Profile = () => {
     debounce(async (userId: string, isFollowing: boolean) => {
       await followUser({ userId, isFollowing });
     }, 300),
-    []
+    [followUser]
   );
 
-  if (!currentUser || !user || isLoading)
+  if (!currentUser || !user || isLoading) {
     return (
       <div className="flex-center w-full h-full">
         <PulseLoader />
       </div>
     );
+  }
 
-  if (!data) return;
+  if (!data) return null;
 
   return (
     <div className="profile-container">
@@ -189,16 +191,21 @@ const Profile = () => {
         </div>
       )}
 
-      <Routes>
-        <Route index element={<GridPostList posts={data} showUser={false} />} />
-        {currentUser._id === user.id && (
+      <Suspense fallback={<PulseLoader color="#fff" />}>
+        <Routes>
           <Route
-            path="/liked-posts"
-            element={<LikedPosts currentUser={currentUser} />}
+            index
+            element={<GridPostList posts={data} showUser={false} />}
           />
-        )}
-      </Routes>
-      <Outlet />
+          {currentUser._id === user.id && (
+            <Route
+              path="/liked-posts"
+              element={<LikedPosts currentUser={currentUser} />}
+            />
+          )}
+        </Routes>
+        <Outlet />
+      </Suspense>
     </div>
   );
 };

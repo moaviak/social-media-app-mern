@@ -1,8 +1,9 @@
+import { lazy, Suspense } from "react";
 import { Link } from "react-router-dom";
-
-import { PostStats } from "@/components/shared";
 import { IPost } from "@/types";
-import useAuth from "@/hooks/useAuth";
+import Loader from "./Loader";
+
+const PostStats = lazy(() => import("@/components/shared/PostStats"));
 
 type GridPostListProps = {
   posts: IPost[];
@@ -15,8 +16,6 @@ const GridPostList = ({
   showUser = true,
   showStats = true,
 }: GridPostListProps) => {
-  const user = useAuth();
-
   return (
     <ul className="grid-container">
       {posts.map((post) => {
@@ -47,7 +46,11 @@ const GridPostList = ({
                   <p className="line-clamp-1">{post.creator.name}</p>
                 </Link>
               )}
-              {showStats && <PostStats post={post} userId={user.id} />}
+              {showStats && (
+                <Suspense fallback={<Loader />}>
+                  <PostStats post={post} />
+                </Suspense>
+              )}
             </div>
           </li>
         );

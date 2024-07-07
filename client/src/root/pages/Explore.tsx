@@ -1,15 +1,15 @@
-import { useEffect, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { useInView } from "react-intersection-observer";
-
-import { Input } from "@/components/ui";
-import useDebounce from "@/hooks/useDebounce";
-import { GridPostList } from "@/components/shared";
 import { PulseLoader } from "react-spinners";
+import useDebounce from "@/hooks/useDebounce";
 import {
   useGetPopularPostsQuery,
   useSearchPostsQuery,
 } from "@/app/api/postApiSlice";
 import { IPost } from "@/types";
+import { Input } from "@/components/ui";
+
+const GridPostList = lazy(() => import("@/components/shared/GridPostList"));
 
 export type SearchResultProps = {
   isSearchFetching: boolean;
@@ -58,7 +58,6 @@ const Explore = () => {
       newPosts.forEach((post) => postSet.current.add(post._id));
       setPosts((prevPosts) => [...prevPosts, ...newPosts]);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   useEffect(() => {
@@ -121,12 +120,16 @@ const Explore = () => {
 
       <div className="flex flex-wrap gap-9 w-full max-w-5xl">
         {shouldShowSearchResults ? (
-          <SearchResults
-            isSearchFetching={isSearchFetching}
-            searchedPosts={searchedPosts}
-          />
+          <Suspense fallback={<PulseLoader color="#fff" />}>
+            <SearchResults
+              isSearchFetching={isSearchFetching}
+              searchedPosts={searchedPosts}
+            />
+          </Suspense>
         ) : shouldShowPosts ? (
-          <GridPostList posts={posts} />
+          <Suspense fallback={<PulseLoader color="#fff" />}>
+            <GridPostList posts={posts} />
+          </Suspense>
         ) : isErrorPosts ? (
           <p className="text-light-4 mt-10 text-center w-full">
             Something bad happen
