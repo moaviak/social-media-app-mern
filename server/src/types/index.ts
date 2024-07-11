@@ -43,3 +43,16 @@ export type IComment = {
   text: string;
   likes: Types.ObjectId[];
 };
+
+export type IChat = {
+  _id: Types.ObjectId;
+  participants: Types.ObjectId[];
+  messages: Types.ObjectId[];
+};
+
+export type IMessage = {
+  _id: Types.ObjectId;
+  sender: Types.ObjectId;
+  chat: Types.ObjectId;
+  content: string;
+};

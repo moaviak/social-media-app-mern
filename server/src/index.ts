@@ -15,6 +15,7 @@ import userRoutes from "./routes/userRoutes";
 import authRoutes from "./routes/authRoutes";
 import postRoutes from "./routes/postRoutes";
 import corsOptions from "./config/corsOptions";
+import chatRoutes from "./routes/chatRoutes";
 
 // Configuration
 dotenv.config();
@@ -33,10 +34,12 @@ app.use(cookieParser());
 app.use("/", express.static(path.join(__dirname, "..", "public")));
 
 app.use("/", root);
+
 // Routes
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/posts", postRoutes);
+app.use("/api/chats", chatRoutes);
 
 app.all("*", (req, res) => {
   res.status(404);
