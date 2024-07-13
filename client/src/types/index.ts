@@ -58,3 +58,18 @@ export type IComment = {
   createdAt: string;
   updatedAt: string;
 };
+
+export type IChat = {
+  _id: string;
+  updatedAt: string;
+  sender: IUser;
+};
+
+export type IMessage = {
+  _id: string;
+  content: string;
+  sender: IUser;
+  chat: string;
+  createdAt: string;
+  updatedAt: string;
+};

@@ -71,3 +71,38 @@ export interface IError {
   };
   status: number;
 }
+
+export function formatDateToTodayTime(dateString: string): string {
+  const date = new Date(dateString);
+
+  const today = new Date();
+  const yesterday = new Date(today);
+  yesterday.setDate(today.getDate() - 1);
+
+  const isToday = date.toDateString() === today.toDateString();
+  const isYesterday = date.toDateString() === yesterday.toDateString();
+
+  const timeOptions: Intl.DateTimeFormatOptions = {
+    hour: "numeric",
+    minute: "numeric",
+    hour12: true,
+  };
+  const timeString = new Intl.DateTimeFormat("en-US", timeOptions).format(date);
+
+  const dateOptions: Intl.DateTimeFormatOptions = {
+    month: "long",
+    day: "numeric",
+  };
+  const dateStringFormatted = new Intl.DateTimeFormat(
+    "en-US",
+    dateOptions
+  ).format(date);
+
+  if (isToday) {
+    return `Today ${timeString}`;
+  } else if (isYesterday) {
+    return `Yesterday ${timeString}`;
+  } else {
+    return `${dateStringFormatted}, ${timeString}`;
+  }
+}

@@ -20,6 +20,7 @@ const Profile = lazy(() => import("./root/pages/Profile"));
 const Saved = lazy(() => import("./root/pages/Saved"));
 const UpdateProfile = lazy(() => import("./root/pages/UpdateProfile"));
 const UsersPage = lazy(() => import("./root/pages/UsersPage"));
+const ChatsPage = lazy(() => import("./root/pages/ChatsPage"));
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
               <Route index element={<Home />} />
               <Route path="/explore" element={<Explore />} />
               <Route path="/saved" element={<Saved />} />
+              <Route path="/chats/*" element={<ChatsPage />} />
               <Route path="/users/:id/*" element={<UsersPage />} />
               <Route path="/create-post" element={<CreatePost />} />
               <Route path="/update-post/:id" element={<EditPost />} />

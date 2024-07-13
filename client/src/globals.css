@@ -68,6 +68,14 @@
     @apply text-[12px] font-semibold leading-[140%];
   }
 
+  .subtle-medium {
+    @apply text-[12px] font-medium leading-[140%];
+  }
+
+  .subtle-regular {
+    @apply text-[12px] font-normal leading-[140%];
+  }
+
   .tiny-medium {
     @apply text-[10px] font-medium leading-[140%];
   }
@@ -219,7 +227,7 @@
 
   /* Left sidebar */
   .leftsidebar {
-    @apply hidden md:flex px-6 py-10 flex-col justify-between min-w-[270px] bg-dark-2 overflow-y-scroll custom-scrollbar;
+    @apply hidden md:flex px-4 py-8 lg:px-6 lg:py-10 flex-col justify-between min-w-[10%] bg-dark-2 overflow-y-scroll custom-scrollbar;
   }
 
   .leftsidebar-link {
@@ -248,6 +256,27 @@
   /* Commnents List */
   .comments_list-container {
     @apply flex flex-col flex-auto items-center gap-4 overflow-y-scroll my-4 py-4 px-3 custom-scrollbar;
+  }
+
+  /* Chats Page */
+  .chats_page-container {
+    @apply flex justify-center w-full max-w-6xl px-4 pt-4 lg:px-8 lg:pt-8 mx-auto;
+  }
+
+  .chats_page-all_chats {
+    @apply flex flex-col w-full md:w-[35%] md:py-8 h-full;
+  }
+
+  .chats_page-all_chats-chats {
+    @apply mt-6 lg:mt-8 flex flex-col gap-2 lg:gap-4 overflow-y-scroll custom-scrollbar;
+  }
+
+  .chats_page-chat {
+    @apply w-full md:w-[65%] mb-6 lg:mb-8 bg-dark-2 rounded-[20px] flex flex-col justify-between h-[95%] lg:h-[93%] px-4 lg:px-6;
+  }
+
+  .chats_page-chat_header {
+    @apply flex-grow-0 flex-shrink-0 w-full flex justify-between py-2 lg:py-4 border-b-2 border-dark-4;
   }
 }
 

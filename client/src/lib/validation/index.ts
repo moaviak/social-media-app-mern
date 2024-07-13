@@ -56,3 +56,13 @@ export const CommentValidation = z.object({
     .min(1, { message: "This field is required" })
     .max(2200, { message: "Maximum 2200 characters" }),
 });
+
+// ============================================================
+// Message
+// ============================================================
+export const MessageValidation = z.object({
+  content: z
+    .string()
+    .min(1, { message: "Please type a message." })
+    .max(2200, { message: "Maximum 2200 characters." }),
+});

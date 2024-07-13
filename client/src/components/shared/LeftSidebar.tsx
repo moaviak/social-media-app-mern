@@ -82,6 +82,8 @@ const LeftSidebar = () => {
                     className={`group-hover:invert-white ${
                       isActive && "invert-white"
                     }`}
+                    height={24}
+                    width={24}
                   />
                   {link.label}
                 </NavLink>
@@ -93,7 +95,7 @@ const LeftSidebar = () => {
 
       <Button
         variant="ghost"
-        className="shad-button_ghost"
+        className="flex gap-4 items-center justify-start hover:bg-transparent hover:text-white mt-3 px-3"
         onClick={(e) => handleSignOut(e)}
       >
         <img src="/assets/icons/logout.svg" alt="logout" />

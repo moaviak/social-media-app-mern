@@ -69,7 +69,8 @@ const CommentForm = ({ post }: CommentFormProps) => {
                     />
                     <Button
                       type="submit"
-                      className="absolute right-0 bg-transparent"
+                      variant="ghost"
+                      className="absolute right-0 hover:bg-transparent"
                     >
                       {isLoading ? (
                         <Loader />
