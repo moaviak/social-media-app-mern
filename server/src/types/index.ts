@@ -1,3 +1,4 @@
+import { JwtPayload } from "jsonwebtoken";
 import { Types } from "mongoose";
 
 export type IUser = {
@@ -56,3 +57,14 @@ export type IMessage = {
   chat: Types.ObjectId;
   content: string;
 };
+
+export interface DecodedToken extends JwtPayload {
+  user: {
+    id: string | Types.ObjectId;
+    name: string;
+    username: string;
+    email: string;
+    profilePicture: string;
+    bio: string;
+  };
+}

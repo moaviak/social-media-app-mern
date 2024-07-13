@@ -1,17 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { Types } from "mongoose";
-
-interface DecodedToken {
-  user: {
-    id: string | Types.ObjectId;
-    name: string;
-    username: string;
-    email: string;
-    profilePicture: string;
-    bio: string;
-  };
-}
+import { DecodedToken } from "../types";
 
 export const protect = async (
   req: Request,

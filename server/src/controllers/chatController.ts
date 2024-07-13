@@ -3,6 +3,7 @@ import Chat from "../models/Chat";
 import mongoose from "mongoose";
 import User from "../models/User";
 import Message from "../models/Message";
+import { emitSocketEvent } from "../socket";
 
 /**
  * @desc Get all chats of user
@@ -89,29 +90,46 @@ export const getAllMessages = asyncHandler(async (req, res) => {
         from: "messages",
         localField: "messages",
         foreignField: "_id",
-        as: "message",
+        as: "messages",
       },
     },
     {
-      $unwind: "$message",
+      $unwind: "$messages",
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "messages.sender",
+        foreignField: "_id",
+        as: "messages.senderDetails",
+      },
+    },
+    {
+      $unwind: "$messages.senderDetails",
     },
     {
       $sort: {
-        "message.createdAt": 1, // Assuming you want to sort messages by creation time
+        "messages.createdAt": 1, // Sort messages by creation time
       },
     },
     {
-      $group: {
-        _id: "$_id",
-        messages: { $push: "$message" },
-        participants: { $first: "$participants" },
-        createdAt: { $first: "$createdAt" },
-        updatedAt: { $first: "$updatedAt" },
+      $project: {
+        _id: "$messages._id",
+        content: "$messages.content",
+        sender: {
+          _id: "$messages.senderDetails._id",
+          name: "$messages.senderDetails.name",
+          username: "$messages.senderDetails.username",
+          profilePicture: "$messages.senderDetails.profilePicture",
+        },
+        chat: "$_id",
+        createdAt: "$messages.createdAt",
+        updatedAt: "$messages.updatedAt",
       },
     },
   ]);
 
-  res.status(200).json(messages[0].messages || []);
+  res.status(200).json(messages);
 });
 
 /**
@@ -161,6 +179,12 @@ export const sendMessage = asyncHandler(async (req, res) => {
   chat.messages.push(message._id);
 
   await chat.save();
+
+  chat.participants.forEach((participant) => {
+    if (participant.toString() === senderId) return;
+
+    emitSocketEvent(req, participant.toString(), "messageSent", message);
+  });
 
   res.status(201).json({ message: "Message sent successfully" });
 });
