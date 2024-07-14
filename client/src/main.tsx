@@ -6,6 +6,7 @@ import App from "./App";
 import { Provider } from "react-redux";
 import { store } from "./app/store";
 import { disableReactDevTools } from "@fvilers/disable-react-devtools";
+import SocketContextProvider from "@/context/SocketContext";
 
 if (import.meta.env.VITE_REACT_APP_NODE_ENV === "production") {
   disableReactDevTools();
@@ -14,9 +15,11 @@ if (import.meta.env.VITE_REACT_APP_NODE_ENV === "production") {
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <Provider store={store}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <SocketContextProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </SocketContextProvider>
     </Provider>
   </React.StrictMode>
 );

@@ -170,7 +170,7 @@ export const sendMessage = asyncHandler(async (req, res) => {
   }
 
   // create new message
-  const message = await Message.create({
+  let message = await Message.create({
     content,
     sender: new mongoose.Types.ObjectId(senderId),
     chat: chat._id,
@@ -179,6 +179,9 @@ export const sendMessage = asyncHandler(async (req, res) => {
   chat.messages.push(message._id);
 
   await chat.save();
+
+  // Populate the sender in the message
+  message = await message.populate("sender", "name username profilePicture");
 
   chat.participants.forEach((participant) => {
     if (participant.toString() === senderId) return;

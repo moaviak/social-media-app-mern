@@ -6,13 +6,39 @@ import {
 } from "@/app/api/chatApiSlice";
 import Loader from "@/components/shared/Loader";
 import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { IMessage } from "@/types";
+import { useSocketContext } from "@/context/SocketContext";
+import useChatScroll from "@/hooks/useChatScroll";
 
 const ChatFrame = () => {
   const { id } = useParams();
 
-  const { data: messages, isLoading } = useGetAllMessagesQuery({
+  const [messages, setMessages] = useState<IMessage[]>([]);
+
+  const { data, isLoading } = useGetAllMessagesQuery({
     chatId: id || "",
   });
+
+  const { socket } = useSocketContext();
+
+  const ref = useChatScroll(messages) as React.MutableRefObject<HTMLDivElement>;
+
+  useEffect(() => {
+    if (data) {
+      setMessages(data);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    socket?.on("messageSent", (newMessage) => {
+      setMessages([...messages, newMessage]);
+    });
+
+    return () => {
+      socket?.off("messageSet");
+    };
+  }, [messages, socket]);
 
   const { chats } = useGetAllChatsQuery(null, {
     selectFromResult: ({ data }) => ({
@@ -57,7 +83,10 @@ const ChatFrame = () => {
           />
         </div>
       </div>
-      <div className="w-full flex-1 overflow-y-scroll custom-scrollbar">
+      <div
+        className="w-full flex-1 overflow-y-scroll custom-scrollbar"
+        ref={ref}
+      >
         {messages.map((message) => (
           <Message key={message._id} message={message} />
         ))}

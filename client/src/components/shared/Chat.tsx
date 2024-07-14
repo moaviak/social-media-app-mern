@@ -17,7 +17,7 @@ const Chat = ({ chat }: { chat: IChat }) => {
           chat.sender.profilePicture || "/assets/icons/profile-placeholder.svg"
         }
         alt="profile"
-        className="object-cover h-12 w-12 md:h-10 md:w-10 lg:h-14 lg:w-14"
+        className="object-cover h-12 w-12 md:h-10 md:w-10 lg:h-14 lg:w-14 rounded-full"
       />
       <div>
         <p className="base-medium md:small-medium lg:base-medium">
