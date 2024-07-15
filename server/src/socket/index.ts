@@ -40,6 +40,7 @@ export const initializeSocketIO = (io: Server) => {
       socket.on("disconnect", () => {
         console.log("user has disconnected. userId: " + user.id);
         delete userSocketMap[user._id.toString()];
+        io.emit("getOnlineUsers", Object.keys(userSocketMap));
       });
     } catch (error) {
       socket.emit(
