@@ -1,9 +1,9 @@
 import { useGetAllChatsQuery } from "@/app/api/chatApiSlice";
-import { Loader } from "@/components/shared";
 import Chat from "@/components/shared/Chat";
 import { Link, Outlet, Route, Routes, useLocation } from "react-router-dom";
 import ChatFrame from "./ChatFrame";
 import useMediaQuery from "@/hooks/useMediaQuery";
+import ChatSkeleton from "@/components/skeletons/ChatSkeleton";
 
 const Chats = () => {
   const { data: chats, isLoading } = useGetAllChatsQuery(null);
@@ -27,7 +27,7 @@ const Chats = () => {
             <h2 className="h3-bold md:body-bold lg:h2-bold">All Chats</h2>
           </div>
           {isLoading ? (
-            <Loader />
+            <ChatSkeleton />
           ) : (
             <div className="chats_page-all_chats-chats">
               {chats?.map((chat) => (
@@ -44,7 +44,22 @@ const Chats = () => {
 
       <Routes>
         {isDesktop && (
-          <Route index element={<p className="w-[65%]">Select Chat</p>} />
+          <Route
+            index
+            element={
+              <div className="w-[65%] flex flex-col items-center justify-center">
+                <img
+                  src="/assets/icons/chat.svg"
+                  alt="message"
+                  className="h-20 w-20 invert-white mb-2"
+                />
+                <p className="body-medium tracking-wide">Your Messages</p>
+                <p className="text-light-3 small-medium">
+                  Send a message to start a chat.
+                </p>
+              </div>
+            }
+          />
         )}
         <Route path="/:id" element={<ChatFrame />} />
       </Routes>

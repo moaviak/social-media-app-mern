@@ -37,22 +37,28 @@ const SocketContextProvider = ({ children }: { children: ReactNode }) => {
   const token = useSelector(selectCurrentToken);
 
   useEffect(() => {
-    if (!token) return;
-    const socket = io(socketUrl, {
-      withCredentials: true,
-      auth: { token },
-    });
+    if (token) {
+      const socket = io(socketUrl, {
+        withCredentials: true,
+        auth: { token },
+      });
 
-    socketRef.current = socket;
+      socketRef.current = socket;
 
-    socket.on("getOnlineUsers", (users: string[]) => {
-      setOnlineUsers(users);
-    });
+      socket.on("getOnlineUsers", (users: string[]) => {
+        setOnlineUsers(users);
+      });
 
-    return () => {
-      socket.close();
-      socketRef.current = null;
-    };
+      return () => {
+        socket.close();
+        socketRef.current = null;
+      };
+    } else {
+      if (socketRef.current) {
+        socketRef.current.close();
+        socketRef.current = null;
+      }
+    }
   }, [token]);
 
   return (

@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import { useSendLogoutMutation } from "@/app/api/authApiSlice";
@@ -8,11 +7,15 @@ const Topbar = () => {
   const navigate = useNavigate();
   const user = useAuth();
 
-  const [sendLogout, { isSuccess }] = useSendLogoutMutation();
+  const [sendLogout] = useSendLogoutMutation();
 
-  useEffect(() => {
-    if (isSuccess) navigate(0);
-  }, [isSuccess, navigate]);
+  const handleSignOut = async (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    e.preventDefault();
+    await sendLogout({});
+    navigate("/sign-in");
+  };
 
   return (
     <section className="topbar">
@@ -30,7 +33,7 @@ const Topbar = () => {
           <Button
             variant="ghost"
             className="shad-button_ghost"
-            onClick={sendLogout}
+            onClick={(e) => handleSignOut(e)}
           >
             <img src="/assets/icons/logout.svg" alt="logout" />
           </Button>
