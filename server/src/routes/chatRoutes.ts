@@ -12,7 +12,7 @@ router.use(protect);
 
 router.get("/", getAllChats);
 
-router.get("/:chatId", getAllMessages);
+router.get("/:id", getAllMessages);
 
 router.post("/:id", sendMessage);
 

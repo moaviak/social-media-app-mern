@@ -224,6 +224,8 @@ export const getUserFollowing = asyncHandler(
 export const searchUsers = asyncHandler(async (req: Request, res: Response) => {
   const { term } = req.query;
 
+  const { id } = req.body.user;
+
   if (!term || typeof term !== "string") {
     res.status(400).json({ message: "Invalid search term" });
     return;
@@ -234,9 +236,14 @@ export const searchUsers = asyncHandler(async (req: Request, res: Response) => {
   const matchingUsers = await User.aggregate([
     {
       $match: {
-        $or: [
-          { name: { $regex: searchRegex } },
-          { username: { $regex: searchRegex } },
+        $and: [
+          {
+            $or: [
+              { name: { $regex: searchRegex } },
+              { username: { $regex: searchRegex } },
+            ],
+          },
+          { _id: { $ne: new mongoose.Types.ObjectId(id as string) } },
         ],
       },
     },

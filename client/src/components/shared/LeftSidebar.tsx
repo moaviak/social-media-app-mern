@@ -62,8 +62,12 @@ const LeftSidebar = () => {
 
         <ul className="flex flex-col gap-3">
           {sidebarLinks.map((link: INavLink) => {
-            const isActive =
-              pathname === link.route || pathname === link.route + "/following";
+            let isActive = false;
+            if (link.route === "/" && pathname === "/") {
+              isActive = true;
+            } else if (link.route !== "/" && pathname.includes(link.route)) {
+              isActive = true;
+            }
 
             return (
               <li

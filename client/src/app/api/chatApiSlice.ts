@@ -21,9 +21,9 @@ export const chatApiSlice = apiSlice.injectEndpoints({
         }
       },
     }),
-    getAllMessages: builder.query<IMessage[], { chatId: string }>({
-      query: ({ chatId }) => ({
-        url: `/api/chats/${chatId}`,
+    getAllMessages: builder.query<IMessage[], { id: string }>({
+      query: ({ id }) => ({
+        url: `/api/chats/${id}`,
         validateStatus: (response, result) => {
           return response.status === 200 && !result.isError;
         },
@@ -32,7 +32,7 @@ export const chatApiSlice = apiSlice.injectEndpoints({
         if (result) {
           return [
             { type: "Message", id: "LIST" },
-            { type: "Chat", id: args.chatId },
+            { type: "Chat", id: args.id },
             ...result.map((message) => ({
               type: "Message" as const,
               id: message._id,
@@ -41,7 +41,7 @@ export const chatApiSlice = apiSlice.injectEndpoints({
         } else {
           return [
             { type: "Message", id: "LIST" },
-            { type: "Chat", id: args.chatId },
+            { type: "Chat", id: args.id },
           ];
         }
       },
@@ -52,7 +52,10 @@ export const chatApiSlice = apiSlice.injectEndpoints({
         method: "POST",
         body: { content },
       }),
-      invalidatesTags: [{ type: "Message", id: "LIST" }],
+      invalidatesTags: [
+        { type: "Message", id: "LIST" },
+        { type: "Chat", id: "LIST" },
+      ],
     }),
   }),
 });

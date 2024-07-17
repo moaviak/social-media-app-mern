@@ -11,22 +11,11 @@ import {
 } from "@/components/ui";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useParams } from "react-router-dom";
-import {
-  useGetAllChatsQuery,
-  useSendMessageMutation,
-} from "@/app/api/chatApiSlice";
+import { useSendMessageMutation } from "@/app/api/chatApiSlice";
 import { Loader } from "../shared";
 
 const MessageForm = () => {
-  const { id: chatId } = useParams();
-
-  const { chats } = useGetAllChatsQuery(null, {
-    selectFromResult: ({ data }) => ({
-      chats: data?.filter((chat) => chat._id === chatId),
-    }),
-  });
-
-  const receiverId = chats ? chats[0].sender._id : "";
+  const { id: receiverId } = useParams();
 
   const [sendMessage, { isLoading }] = useSendMessageMutation();
 
@@ -45,8 +34,6 @@ const MessageForm = () => {
       console.log(error);
     }
   };
-
-  if (!chats) return;
 
   return (
     <Form {...form}>

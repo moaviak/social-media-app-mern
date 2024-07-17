@@ -68,13 +68,14 @@ export const getAllChats = asyncHandler(async (req, res) => {
 
 /**
  * @desc Get all messages from chat
- * @route GET /api/chats/:chatId
+ * @route GET /api/chats/:id
  * @access Private
  */
 export const getAllMessages = asyncHandler(async (req, res) => {
-  const { chatId } = req.params;
+  const { id } = req.params;
+  const { id: userId } = req.body.user;
 
-  if (!chatId) {
+  if (!id) {
     res.status(400).json({ message: "Invalid chat id" });
     return;
   }
@@ -82,7 +83,17 @@ export const getAllMessages = asyncHandler(async (req, res) => {
   const messages = await Chat.aggregate([
     {
       $match: {
-        _id: new mongoose.Types.ObjectId(chatId),
+        $or: [
+          { _id: new mongoose.Types.ObjectId(id) },
+          {
+            participants: {
+              $all: [
+                new mongoose.Types.ObjectId(id),
+                new mongoose.Types.ObjectId(userId as string),
+              ],
+            },
+          },
+        ],
       },
     },
     {
