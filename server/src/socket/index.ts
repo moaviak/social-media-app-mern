@@ -35,6 +35,20 @@ export const initializeSocketIO = (io: Server) => {
 
       io.emit("getOnlineUsers", Object.keys(userSocketMap));
 
+      socket.on("typing", (receiverId) => {
+        io.in(getReceiverSocketId(receiverId)).emit(
+          "typing",
+          user._id.toString()
+        );
+      });
+
+      socket.on("stopTyping", (receiverId) => {
+        io.in(getReceiverSocketId(receiverId)).emit(
+          "stopTyping",
+          user._id.toString()
+        );
+      });
+
       console.log("User connected. userId: ", user.id);
 
       socket.on("disconnect", () => {

@@ -13,6 +13,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useParams } from "react-router-dom";
 import { useSendMessageMutation } from "@/app/api/chatApiSlice";
 import { Loader } from "../shared";
+import { useEffect, useRef, useState } from "react";
+import { useSocketContext } from "@/context/SocketContext";
 
 const MessageForm = () => {
   const { id: receiverId } = useParams();
@@ -25,6 +27,42 @@ const MessageForm = () => {
       content: "",
     },
   });
+
+  const [isTyping, setIsTyping] = useState(false);
+
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
+  const { socket } = useSocketContext();
+
+  useEffect(() => {
+    if (inputRef.current) {
+      const handleFocus = () => setIsTyping(true);
+      const handleBlur = () => setIsTyping(false);
+
+      inputRef.current.addEventListener("focus", handleFocus);
+      inputRef.current.addEventListener("blur", handleBlur);
+
+      // Cleanup event listeners on component unmount
+      return () => {
+        if (inputRef.current) {
+          inputRef.current.removeEventListener("focus", handleFocus);
+          inputRef.current.removeEventListener("blur", handleBlur);
+        }
+      };
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isTyping) {
+      socket?.emit("typing", receiverId);
+    } else {
+      socket?.emit("stopTyping", receiverId);
+    }
+
+    return () => {
+      socket?.emit("stopTyping", receiverId);
+    };
+  }, [isTyping, receiverId, socket]);
 
   const handleSubmit = async (value: z.infer<typeof MessageValidation>) => {
     try {
@@ -50,6 +88,10 @@ const MessageForm = () => {
                     placeholder="Write your message here..."
                     className="h-10 bg-dark-4 border-none placeholder:text-light-4 focus-visible:ring-1 focus-visible:ring-offset-1 ring-offset-light-3 rounded-lg pr-10"
                     {...field}
+                    ref={(e) => {
+                      field.ref(e);
+                      inputRef.current = e;
+                    }}
                   />
                   <Button
                     type="submit"

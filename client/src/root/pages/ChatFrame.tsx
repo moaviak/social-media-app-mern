@@ -13,10 +13,15 @@ const ChatFrame = () => {
   const { id } = useParams();
 
   const [messages, setMessages] = useState<IMessage[]>([]);
+  const [isTyping, setIsTyping] = useState(false);
 
   const { data, isLoading } = useGetAllMessagesQuery({
     id: id || "",
   });
+
+  const { data: user, isLoading: isFetchingUser } = useGetUserByIdQuery(
+    id || ""
+  );
 
   const { socket, onlineUsers } = useSocketContext();
   const ref = useChatScroll(messages) as React.MutableRefObject<HTMLDivElement>;
@@ -32,14 +37,22 @@ const ChatFrame = () => {
       setMessages([...messages, newMessage]);
     });
 
+    socket?.on("typing", (userId) => {
+      if (userId === id) {
+        setIsTyping(true);
+      }
+    });
+
+    socket?.on("stopTyping", (userId) => {
+      if (userId === id) {
+        setIsTyping(false);
+      }
+    });
+
     return () => {
       socket?.off("messageSet");
     };
-  }, [messages, socket]);
-
-  const { data: user, isLoading: isFetchingUser } = useGetUserByIdQuery(
-    id || ""
-  );
+  }, [id, messages, socket]);
 
   if (!user && !isFetchingUser) {
     return;
@@ -61,7 +74,11 @@ const ChatFrame = () => {
           <div>
             <p className="small-medium lg:base-medium">{user?.name}</p>
             <p className="text-light-4 subtle-medium lg:small-medium">
-              {isOnline ? "Online" : "@" + user?.username}
+              {isTyping
+                ? "typing..."
+                : isOnline
+                ? "Online"
+                : "@" + user?.username}
             </p>
           </div>
         </div>
