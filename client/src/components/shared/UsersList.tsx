@@ -1,6 +1,6 @@
 import { IUser } from "@/types";
 import { lazy, Suspense } from "react";
-import { PulseLoader } from "react-spinners";
+import UserSkeleton from "../skeletons/UserSkeleton";
 
 const UserCard = lazy(() => import("./UserCard"));
 
@@ -17,7 +17,7 @@ const UsersList = ({ title, users }: UsersListProps) => {
         <ul className="user-grid">
           {users?.map((user) => (
             <li key={user?._id} className="flex-1 min-w-[200px] w-full  ">
-              <Suspense fallback={<PulseLoader color="#fff" />}>
+              <Suspense fallback={<UserSkeleton />}>
                 <UserCard user={user} />
               </Suspense>
             </li>

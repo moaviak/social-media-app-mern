@@ -4,6 +4,8 @@ import { PulseLoader } from "react-spinners";
 import { useGetRecentPostsQuery } from "@/app/api/postApiSlice";
 import { useGetTopCreatorsQuery } from "@/app/api/userApiSlice";
 import { IPost } from "@/types";
+import PostCardSkeleton from "@/components/skeletons/PostCardSkeleton";
+import UserSkeleton from "@/components/skeletons/UserSkeleton";
 
 // Lazy load components
 const PostCard = lazy(() => import("@/components/shared/PostCard"));
@@ -17,14 +19,14 @@ const Home = () => {
 
   const {
     data,
-    isLoading: isPostLoading,
+    isLoading: isPostsLoading,
     isError: isErrorPosts,
     isFetching,
   } = useGetRecentPostsQuery({ page });
 
   const {
     data: creators,
-    isLoading: isCreatorLoading,
+    isLoading: isCreatorsLoading,
     isError: isErrorCreators,
   } = useGetTopCreatorsQuery(undefined);
 
@@ -78,13 +80,17 @@ const Home = () => {
       <div className="home-container">
         <div className="home-posts">
           <h2 className="h3-bold md:h2-bold text-left w-full">Home Feed</h2>
-          {isPostLoading && !posts ? (
-            <PulseLoader color="#fff" />
+          {isPostsLoading && !posts ? (
+            <ul className="flex flex-col flex-1 gap-9 w-full ">
+              {[...Array(3)].map((i) => (
+                <PostCardSkeleton key={i} />
+              ))}
+            </ul>
           ) : (
             <ul className="flex flex-col flex-1 gap-9 w-full ">
               {posts.map((post: IPost) => (
                 <li key={post._id} className="flex justify-center w-full">
-                  <Suspense fallback={<PulseLoader color="#fff" />}>
+                  <Suspense fallback={<PostCardSkeleton />}>
                     <PostCard post={post} />
                   </Suspense>
                 </li>
@@ -101,13 +107,17 @@ const Home = () => {
 
       <div className="home-creators">
         <h3 className="h3-bold text-light-1">Top Creators</h3>
-        {isCreatorLoading && !creators ? (
-          <PulseLoader color="#fff" />
+        {isCreatorsLoading && !creators ? (
+          <ul className="flex flex-col flex-1 gap-9 w-full ">
+            {[...Array(10)].map((i) => (
+              <UserSkeleton key={i} />
+            ))}
+          </ul>
         ) : (
           <ul className="grid 2xl:grid-cols-2 gap-6">
             {creators?.map((creator) => (
               <li key={creator?._id}>
-                <Suspense fallback={<PulseLoader color="#fff" />}>
+                <Suspense fallback={<UserSkeleton />}>
                   <UserCard user={creator} handleFollow={handleFollow} />
                 </Suspense>
               </li>

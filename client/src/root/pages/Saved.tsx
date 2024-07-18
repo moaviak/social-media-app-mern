@@ -1,14 +1,11 @@
-import { lazy, Suspense } from "react";
-import useAuth from "@/hooks/useAuth";
 import { useGetSavedPostsQuery } from "@/app/api/postApiSlice";
-import { PulseLoader } from "react-spinners";
-
-const GridPostList = lazy(() => import("@/components/shared/GridPostList"));
+import PostSkeleton from "@/components/skeletons/PostSkeleton";
+import GridPostList from "@/components/shared/GridPostList";
 
 const Saved = () => {
-  const currentUser = useAuth();
-
-  const { data: savedPosts, isLoading } = useGetSavedPostsQuery({});
+  const { data: savedPosts, isLoading: isPostsLoading } = useGetSavedPostsQuery(
+    {}
+  );
 
   if (!savedPosts) return;
 
@@ -25,16 +22,18 @@ const Saved = () => {
         <h2 className="h3-bold md:h2-bold text-left w-full">Saved Posts</h2>
       </div>
 
-      {!currentUser || isLoading ? (
-        <PulseLoader />
+      {isPostsLoading ? (
+        <ul className="grid-container">
+          {[...Array(3)].map((i) => (
+            <PostSkeleton key={i} />
+          ))}
+        </ul>
       ) : (
         <ul className="w-full flex justify-center max-w-5xl gap-9">
           {!savedPosts ? (
             <p className="text-light-4">No available posts</p>
           ) : (
-            <Suspense fallback={<PulseLoader color="#fff" />}>
-              <GridPostList posts={savedPosts} showStats={false} />
-            </Suspense>
+            <GridPostList posts={savedPosts} showStats={false} />
           )}
         </ul>
       )}

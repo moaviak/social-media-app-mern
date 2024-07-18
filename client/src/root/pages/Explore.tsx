@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { PulseLoader } from "react-spinners";
 import useDebounce from "@/hooks/useDebounce";
@@ -8,8 +8,8 @@ import {
 } from "@/app/api/postApiSlice";
 import { IPost } from "@/types";
 import { Input } from "@/components/ui";
-
-const GridPostList = lazy(() => import("@/components/shared/GridPostList"));
+import PostSkeleton from "@/components/skeletons/PostSkeleton";
+import GridPostList from "@/components/shared/GridPostList";
 
 export type SearchResultProps = {
   isSearchFetching: boolean;
@@ -21,7 +21,13 @@ const SearchResults = ({
   searchedPosts,
 }: SearchResultProps) => {
   if (isSearchFetching) {
-    return <PulseLoader color="#fff" />;
+    return (
+      <ul className="grid-container">
+        {[...Array(3)].map((i) => (
+          <PostSkeleton key={i} />
+        ))}
+      </ul>
+    );
   } else if (searchedPosts && searchedPosts.length > 0) {
     return <GridPostList posts={searchedPosts} />;
   } else {
@@ -68,13 +74,6 @@ const Explore = () => {
     }
   }, [data?.nextPage, inView, isPostsFetching, searchValue]);
 
-  if (!posts || isPostLoading)
-    return (
-      <div className="flex-center w-full h-full">
-        <PulseLoader color="#fff" />
-      </div>
-    );
-
   const shouldShowSearchResults = searchValue !== "";
   const shouldShowPosts = !shouldShowSearchResults && posts && posts.length > 0;
 
@@ -120,16 +119,20 @@ const Explore = () => {
 
       <div className="flex flex-wrap gap-9 w-full max-w-5xl">
         {shouldShowSearchResults ? (
-          <Suspense fallback={<PulseLoader color="#fff" />}>
-            <SearchResults
-              isSearchFetching={isSearchFetching}
-              searchedPosts={searchedPosts}
-            />
-          </Suspense>
+          <SearchResults
+            isSearchFetching={isSearchFetching}
+            searchedPosts={searchedPosts}
+          />
         ) : shouldShowPosts ? (
-          <Suspense fallback={<PulseLoader color="#fff" />}>
+          isPostLoading || isPostsFetching ? (
+            <ul className="grid-container">
+              {[...Array(3)].map((i) => (
+                <PostSkeleton key={i} />
+              ))}
+            </ul>
+          ) : (
             <GridPostList posts={posts} />
-          </Suspense>
+          )
         ) : isErrorPosts ? (
           <p className="text-light-4 mt-10 text-center w-full">
             Something bad happen

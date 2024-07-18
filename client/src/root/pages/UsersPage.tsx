@@ -3,10 +3,11 @@ import {
   useGetUserFollowingQuery,
   useSearchUsersQuery,
 } from "@/app/api/userApiSlice";
+import UserSkeleton from "@/components/skeletons/UserSkeleton";
 import { Input } from "@/components/ui";
 import useAuth from "@/hooks/useAuth";
 import useDebounce from "@/hooks/useDebounce";
-import { lazy, Suspense, useState } from "react";
+import { useState } from "react";
 import {
   Link,
   Outlet,
@@ -15,9 +16,8 @@ import {
   useLocation,
   useParams,
 } from "react-router-dom";
-import { PulseLoader } from "react-spinners";
 
-const UsersList = lazy(() => import("@/components/shared/UsersList"));
+import UsersList from "@/components/shared/UsersList";
 
 const UsersPage = () => {
   const { id } = useParams();
@@ -87,31 +87,33 @@ const UsersPage = () => {
               Following
             </Link>
           </div>
-          {!isFollowersLoading ||
-            (!isFollowingLoading && (
-              <div className="flex items-center justify-center">
-                <PulseLoader color="#fff" />
-              </div>
+          {isFollowersLoading ||
+            (isFollowingLoading && (
+              <ul className="user-grid">
+                {[...Array(3)].map((i) => (
+                  <UserSkeleton key={i} />
+                ))}
+              </ul>
             ))}
-          <Suspense fallback={<PulseLoader color="#fff" />}>
-            <Routes>
-              <Route
-                index
-                element={<UsersList title="Followers" users={followers} />}
-              />
-              <Route
-                path="/following"
-                element={<UsersList title="Following" users={following} />}
-              />
-            </Routes>
-          </Suspense>
+          <Routes>
+            <Route
+              index
+              element={<UsersList title="Followers" users={followers} />}
+            />
+            <Route
+              path="/following"
+              element={<UsersList title="Following" users={following} />}
+            />
+          </Routes>
 
           <Outlet />
         </div>
       ) : isSearchFetching ? (
-        <div className="flex items-center justify-center">
-          <PulseLoader color="#fff" />
-        </div>
+        <ul className="user-grid">
+          {[...Array(3)].map((i) => (
+            <UserSkeleton key={i} />
+          ))}
+        </ul>
       ) : !searchedUsers || searchedUsers.length === 0 ? (
         <p className="text-light-4 mt-10 text-center w-full">No users found</p>
       ) : (

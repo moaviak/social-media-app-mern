@@ -68,7 +68,7 @@ const Profile = () => {
     [followUser]
   );
 
-  if (!currentUser || !user || isLoading) {
+  if (!currentUser || isLoading) {
     return (
       <div className="flex-center w-full h-full">
         <PulseLoader />
