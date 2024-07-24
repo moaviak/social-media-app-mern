@@ -1,10 +1,7 @@
 import { useGetPostCommentsQuery } from "@/app/api/commentApiSlice";
 import { IPost } from "@/types";
-import { PulseLoader } from "react-spinners";
-import { lazy, Suspense } from "react";
-import Loader from "./Loader";
-
-const Comment = lazy(() => import("./Comment"));
+import CommentSkeleton from "../skeletons/CommentSkeleton";
+import Comment from "./Comment";
 
 const CommentsList = ({ post }: { post: IPost }) => {
   const { data, isLoading } = useGetPostCommentsQuery({ postId: post._id });
@@ -13,14 +10,16 @@ const CommentsList = ({ post }: { post: IPost }) => {
 
   return (
     <div className="comments_list-container">
-      {isLoading ? (
-        <PulseLoader color="#fff" />
+      {isLoading || !data ? (
+        <div className="w-full flex flex-col gap-4">
+          <CommentSkeleton />
+          <CommentSkeleton />
+          <CommentSkeleton />
+        </div>
       ) : (
         <ul className="w-full flex flex-col gap-4">
           {data.comments.map((comment) => (
-            <Suspense fallback={<Loader />}>
-              <Comment key={comment._id} comment={comment} />
-            </Suspense>
+            <Comment key={comment._id} comment={comment} />
           ))}
         </ul>
       )}

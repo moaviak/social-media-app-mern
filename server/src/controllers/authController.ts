@@ -46,7 +46,7 @@ export const loginUser = asyncHandler(async (req: Request, res: Response) => {
 });
 
 // @desc Register User
-// @route POST /api/auth/
+// @route POST /api/auth
 // @access Public
 export const registerUser = asyncHandler(
   async (req: Request, res: Response) => {

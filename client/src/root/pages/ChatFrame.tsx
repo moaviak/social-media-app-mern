@@ -1,7 +1,7 @@
 import MessageForm from "@/components/forms/MessageForm";
 import Message from "@/components/shared/Message";
 import { useGetAllMessagesQuery } from "@/app/api/chatApiSlice";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { IMessage } from "@/types";
 import { useSocketContext } from "@/context/SocketContext";
@@ -63,7 +63,10 @@ const ChatFrame = () => {
   return (
     <div className="chats_page-chat">
       <div className="chats_page-chat_header">
-        <div className="flex gap-3 lg:gap-4 items-center">
+        <Link
+          className="flex gap-3 lg:gap-4 items-center"
+          to={`/profile/${user?._id}`}
+        >
           <img
             src={
               user?.profilePicture || "/assets/icons/profile-placeholder.svg"
@@ -81,7 +84,7 @@ const ChatFrame = () => {
                 : "@" + user?.username}
             </p>
           </div>
-        </div>
+        </Link>
         <div className="flex gap-3 lg:gap-4 items-center">
           <img
             src="/assets/icons/phone.svg"

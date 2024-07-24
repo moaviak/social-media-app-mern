@@ -4,6 +4,7 @@ import { checkIsLiked, multiFormatDateString } from "@/lib/utils";
 import { IComment } from "@/types";
 import { debounce } from "lodash";
 import { useCallback, useState } from "react";
+import { Link } from "react-router-dom";
 
 const Comment = ({ comment }: { comment: IComment }) => {
   const user = useAuth();
@@ -38,13 +39,16 @@ const Comment = ({ comment }: { comment: IComment }) => {
   if (!comment.user) return;
 
   return (
-    <li className="flex gap-2 items-center w-full">
-      <img
-        src={
-          comment.user.profilePicture || "/assets/icons/profile-placeholder.svg"
-        }
-        className="w-9 h-9 object-cover rounded-full"
-      />
+    <li className="flex gap-2 w-full">
+      <Link to={`/profile/${comment.user._id}`}>
+        <img
+          src={
+            comment.user.profilePicture ||
+            "/assets/icons/profile-placeholder.svg"
+          }
+          className="w-9 h-9 object-cover rounded-full"
+        />
+      </Link>
       <div className="flex flex-col flex-[8]">
         <div className="flex gap-2">
           <p className="text-light-3 small-semibold">{comment.user.username}</p>
@@ -54,7 +58,7 @@ const Comment = ({ comment }: { comment: IComment }) => {
           {multiFormatDateString(comment.createdAt, true)}
         </p>
       </div>
-      <div className="flex gap-2">
+      <div className="flex gap-2 items-center">
         <img
           src={`${
             isLiked ? "/assets/icons/liked.svg" : "/assets/icons/like.svg"
